@@ -7,3 +7,9 @@ Android-Rom助手
 3.修改系统镜像<br>
 4.选择 2. Img打包，将会重新生成一个新的镜像文件到images_out目录<br>
 5.替换到刷机包里进行刷机<br>
+
+其它资料：
+
+1.[宅科技-极客论坛](http://bbs.zecoki.com/)
+
+2.[艾瓦克-万能工具箱](http://down.aiwake.net/)

@@ -1,15 +1,28 @@
-Android-Rom助手
+开发工具清单：
 
-使用阅读：
+```
+#Toolist   
+adb    adb工具       
+apktool     反编译工具
+ROM Editor ROM解包封装工具
+make_ext4fs Linux ROM解包封装工具
+sdat2img  sdat格式转system.img镜像
+update.app 华为update.app解包工具
 
-1.将system.img或者userdata.img分区镜像放入images_temp目录<br>
-2.执行Start.bat，选择“1. 解包Img”，解包后文件将会解压到images_temp目录<br>
-3.修改系统镜像<br>
-4.选择 2. Img打包，将会重新生成一个新的镜像文件到images_out目录<br>
-5.替换到刷机包里进行刷机<br>
 
-其它资料：
 
-1.[宅科技-极客论坛](http://bbs.zecoki.com/)
 
-2.[艾瓦克-万能工具箱](http://down.aiwake.net/)
+
+
+
+#待更新
+OdexTool
+dev Doc
+
+```
+
+扫码加入星球，零距离交流指导开发<br/>
+![ROM开发者社区](http://www.zecoki.com/ximages/xq/ewm.jpg "在这里输入图片标题")
+
+
+

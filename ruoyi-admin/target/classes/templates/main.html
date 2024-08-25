@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>统计</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet"/>
+    <link href="../static/css/animate.min.css" th:href="@{/css/animate.min.css}" rel="stylesheet"/>
+    <link href="../static/css/style.min.css" th:href="@{/css/style.min.css}" rel="stylesheet"/>
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right">当月</span>
+                        <h5>月支出</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">[[${payMonthMoney}]]</h1>
+                        <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i>
+                        </div>
+                        <small>开销</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-info pull-right">当月</span>
+                        <h5>月收入</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">[[${totalMonthMoney}]]</h1>
+                        <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i>
+                        </div>
+                        <small>月薪</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-primary pull-right">今年</span>
+                        <h5>年收入</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">[[${totalYearMoney}]]</h1>
+                        <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i>
+                        </div>
+                        <small>年薪</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-danger pull-right">累计</span>
+                        <h5>剩余资产</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">[[${totalMoney}]]</h1>
+                        <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i>
+                        </div>
+                        <small>资产</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>收支分析</h5>
+                        <div class="pull-right">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-xs btn-white" onclick="fetchData('day') ">天</button>
+                                <button type="button" class="btn btn-xs btn-white" onclick="fetchData('month')" >月</button>
+                                <button type="button" class="btn btn-xs btn-white"  onclick="fetchData('year')" >年</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <div class="flot-chart">
+                                    <div class="flot-chart-content" id="flot-dashboard-chart"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <ul class="stat-list">
+                                    <li>
+                                        <h2 class="no-margins" id="incomeTotal">[[${incomeTotal}]]</h2>
+                                        <small>收入</small>
+                                        <div class="stat-percent">48% <i class="fa fa-level-up text-navy"></i>
+                                        </div>
+                                        <div class="progress progress-mini">
+                                            <div style="width: 48%;" class="progress-bar"></div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <h2 class="no-margins " id="expenditureTotal">[[${expenditureTotal}]]</h2>
+                                        <small>支出</small>
+                                        <div class="stat-percent">60% <i class="fa fa-level-down text-navy"></i>
+                                        </div>
+                                        <div class="progress progress-mini">
+                                            <div style="width: 60%;" class="progress-bar"></div>
+                                        </div>
+                                    </li>
+                                 </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <!-- ... 其他部分 ... -->
+                    <div class="ibox-content">
+                        <table class="table table-hover no-margins">
+                            <thead>
+                            <tr>
+                                <th>类型</th>
+                                <th>款项</th>
+                                <th>金额</th>
+                                <th>日期</th>
+                                <th>备注</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- 使用th:each迭代数据 -->
+                            <tr th:each="record : ${records}">
+                                <td th:text="${record.type}"></td>
+                                <td th:text="${record.name}"></td>
+                                <td class="text-navy"> <span th:text="${record.money}"></span></td>
+                                <td><i class="fa fa-clock-o"></i> <span th:text="${#dates.format(record.recordDate, 'yyyy-MM-dd')}"></span></td>
+                                <td th:text="${record.mark}"></td>
+<!--                                <i class="fa fa-level-up"></i>-->
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/ajax/libs/flot/jquery.flot.js}"></script>
+
+    <th:block th:include="include :: sparkline-js" />
+    <script type="text/javascript" th:inline="javascript">
+        $(document).ready(function () {
+            /*<![CDATA[*/
+            var income =  /*[[${income}]]*/ [];
+            var pay =  /*[[${pay}]]*/ [];
+            /*]]>*/
+
+            console.log(income);
+            console.log(pay);
+
+	        var dataset = [
+	            {
+	                label: "收入",
+	                data: income,
+	                color: "#1ab394",
+	                bars: {
+	                    show: true,
+	                    align: "center",
+	                    barWidth: 24 * 60 * 60 * 600,
+	                    lineWidth: 0
+	                }
+
+	            }, {
+	                label: "支出",
+	                data: pay,
+	                yaxis: 2,
+	                color: "#464f88",
+	                lines: {
+	                    lineWidth: 1,
+	                    show: true,
+	                    fill: true,
+	                    fillColor: {
+	                        colors: [{
+	                            opacity: 0.2
+	                        }, {
+	                            opacity: 0.2
+	                        }]
+	                    }
+	                },
+	                splines: {
+	                    show: false,
+	                    tension: 0.6,
+	                    lineWidth: 1,
+	                    fill: 0.1
+	                },
+	            }
+	        ];
+
+
+	        var options = {
+	            xaxis: {
+	                mode: "time",
+	                tickSize: [3, "day"],
+	                tickLength: 0,
+	                axisLabel: "Date",
+	                axisLabelUseCanvas: true,
+	                axisLabelFontSizePixels: 12,
+	                axisLabelFontFamily: 'Arial',
+	                axisLabelPadding: 10,
+	                color: "#838383"
+	            },
+	            yaxes: [{
+	                    position: "left",
+	                    max: 1070,
+	                    color: "#838383",
+	                    axisLabelUseCanvas: true,
+	                    axisLabelFontSizePixels: 12,
+	                    axisLabelFontFamily: 'Arial',
+	                    axisLabelPadding: 3
+	            }, {
+	                    position: "right",
+	                    clolor: "#838383",
+	                    axisLabelUseCanvas: true,
+	                    axisLabelFontSizePixels: 12,
+	                    axisLabelFontFamily: ' Arial',
+	                    axisLabelPadding: 67
+	            }
+	            ],
+	            legend: {
+	                noColumns: 1,
+	                labelBoxBorderColor: "#000000",
+	                position: "nw"
+	            },
+	            grid: {
+	                hoverable: false,
+	                borderWidth: 0,
+	                color: '#838383'
+	            }
+	        };
+
+	        function gd(year, month, day) {
+	            return new Date(year, month - 1, day).getTime();
+	        }
+	
+	        var previousPoint = null,
+	            previousLabel = null;
+	
+	        $.plot($("#flot-dashboard-chart"), dataset, options);
+	    });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.btn-group button');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有按钮上的 active 类
+                buttons.forEach(btn => btn.classList.remove('active'));
+
+                // 为当前点击的按钮添加 active 类
+                this.classList.add('active');
+            });
+        });
+    });
+    </script>
+
+
+<!--    <script th:inline="javascript">-->
+<!--        /*<![CDATA[*/-->
+<!--        function fetchData(type) {-->
+<!--            $.ajax({-->
+<!--                url: '/system/getTotal', // 假设的服务器端点-->
+<!--                type: 'GET',-->
+<!--                data: { type: type }, // 将类型（天、月、年）作为参数发送-->
+<!--                success: function(response) {-->
+<!--                    document.getElementById('incomeTotal').innerHTML = '<h2 className="no-margins" id="incomeTotal">data.incomeTotal</h2></p>';-->
+<!--                    document.getElementById('expenditureTotal').innerHTML = '<h2 className="no-margins" id="expenditureTotal">data.expenditureTotal</h2></p>';-->
+
+<!--                },-->
+<!--                error: function () {-->
+<!--                    alert('数据加载失败！');-->
+<!--                }-->
+<!--            });-->
+<!--        }-->
+<!--        /*]]>*/-->
+<!--    </script>-->
+
+    <script>
+        function fetchData(type) {
+            // 使用 AJAX 发送请求到服务器
+            fetch('/system/getTotal?type=' + type)
+                .then(response => response.json()) // 假设服务器返回 JSON
+                .then(data => {
+                    // 更新页面内容
+                    document.getElementById('incomeTotal').innerHTML = '<h2 className="no-margins" id="incomeTotal">'+ data.income+'</h2></p>';
+                    document.getElementById('expenditureTotal').innerHTML = '<h2 className="no-margins" id="expenditureTotal">'+ data.expenditure+'</h2></p>';
+
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+
+</body>
+</html>

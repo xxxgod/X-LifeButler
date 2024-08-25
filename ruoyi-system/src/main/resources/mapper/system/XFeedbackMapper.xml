@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.XFeedbackMapper">
+    
+    <resultMap type="XFeedback" id="FeedbackResult">
+        <result property="id"    column="id"    />
+        <result property="message"    column="message"    />
+        <result property="name"    column="name"    />
+        <result property="email"    column="email"    />
+        <result property="phone"    column="phone"    />
+        <result property="type"    column="type"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectFeedbackVo">
+        select id, message, name, email, phone, type, create_time from x_feedback
+    </sql>
+
+    <select id="selectFeedbackList" parameterType="XFeedback" resultMap="FeedbackResult">
+        <include refid="selectFeedbackVo"/>
+        <where>  
+            <if test="message != null  and message != ''"> and message = #{message}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectFeedbackById" parameterType="Long" resultMap="FeedbackResult">
+        <include refid="selectFeedbackVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFeedback" parameterType="XFeedback" useGeneratedKeys="true" keyProperty="id">
+        insert into x_feedback
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="message != null">message,</if>
+            <if test="name != null">name,</if>
+            <if test="email != null">email,</if>
+            <if test="phone != null">phone,</if>
+            <if test="type != null">type,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="message != null">#{message},</if>
+            <if test="name != null">#{name},</if>
+            <if test="email != null">#{email},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="type != null">#{type},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFeedback" parameterType="XFeedback">
+        update x_feedback
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="message != null">message = #{message},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFeedbackById" parameterType="Long">
+        delete from x_feedback where id = #{id}
+    </delete>
+
+    <delete id="deleteFeedbackByIds" parameterType="String">
+        delete from x_feedback where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

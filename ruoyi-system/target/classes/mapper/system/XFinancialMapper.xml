@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.XFinancialMapper">
+    
+    <resultMap type="XFinancial" id="XFinancialResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="name"    column="name"    />
+        <result property="money"    column="money"    />
+        <result property="mark"    column="mark"    />
+        <result property="recordDate"    column="record_date"    />
+    </resultMap>
+
+    <sql id="selectXFinancialVo">
+        select id, type, name, money, mark, record_date from x_financial
+    </sql>
+
+    <select id="selectXFinancialList" parameterType="XFinancial" resultMap="XFinancialResult">
+        <include refid="selectXFinancialVo"/>
+        <where>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="money != null  and money != ''"> and money = #{money}</if>
+            <if test="mark != null  and mark != ''"> and mark like concat('%', #{mark}, '%')</if>
+            <if test="recordDate != null "> and record_date = #{recordDate, jdbcType=DATE}  </if>
+        </where>
+    </select>
+
+    <select id="selectXFinancialById" parameterType="Long" resultMap="XFinancialResult">
+        <include refid="selectXFinancialVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertXFinancial" parameterType="XFinancial" useGeneratedKeys="true" keyProperty="id">
+        insert into x_financial
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null">type,</if>
+            <if test="name != null">name,</if>
+            <if test="money != null">money,</if>
+            <if test="mark != null">mark,</if>
+            <if test="recordDate != null">record_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null">#{type},</if>
+            <if test="name != null">#{name},</if>
+            <if test="money != null">#{money},</if>
+            <if test="mark != null">#{mark},</if>
+            <if test="recordDate != null">#{recordDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateXFinancial" parameterType="XFinancial">
+        update x_financial
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">type = #{type},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="mark != null">mark = #{mark},</if>
+            <if test="recordDate != null">record_date = #{recordDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteXFinancialById" parameterType="Long">
+        delete from x_financial where id = #{id}
+    </delete>
+
+    <delete id="deleteXFinancialByIds" parameterType="String">
+        delete from x_financial where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
